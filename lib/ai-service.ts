@@ -71,7 +71,7 @@ Return ONLY valid JSON with these exact fields:
   // Wrap the AI call with retry logic
   const response = await withRetry(async () => {
     return await ai.models.generateContent({
-      model: "gemini-3.8-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",
