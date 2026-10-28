@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  devIndicators: false, // <-- ఈ లైన్ యాడ్ చేయండి
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

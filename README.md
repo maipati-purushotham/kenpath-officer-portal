@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kenpath Assignment — Revenue Officer Portal
 
-## Getting Started
+An AI-assisted application processing tool designed for Telangana Revenue Officers, built entirely in Telugu for local-language accessibility.
 
-First, run the development server:
+**Demo Credentials:** Username: `officer` | Password: `demo123`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 1. The Problem
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Revenue officers in Telangana process hundreds of land record applications (patta transfers, mutations, corrections) daily. Current systems are slow, paper-heavy, and require officers to manually cross-reference documents. When an officer has 50+ pending applications, it is difficult to know which application is the most urgent, quickly identify missing documents, or read through pages of data to write a summary.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 2. Who It Affects
 
-## Learn More
+- **Officers:** Saves hours of manual reading. The dashboard prioritizes urgent cases, and the AI provides instant summaries and risk flags.
+- **Citizens:** Faster approvals and fewer rejections due to easily identifiable missing documents.
+- **Department:** Better audit trails and consistent decision-making.
 
-To learn more about Next.js, take a look at the following resources:
+## 3. What the Application Does
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Dashboard Overview:** Shows total pending applications, urgent cases, and missing documents. Applications are automatically sorted by priority (Urgent > Medium > Normal). Includes a search bar and filter tabs.
+2. **AI Assistant (Powered by Google Gemini):** Generates a 2-3 sentence summary in Telugu, flags missing documents and inconsistencies, and suggests a decision with reasons. The AI never makes the final decision.
+3. **Officer Decision Panel:** The officer enters remarks and clicks Approve, Reject, or Return. All decisions are audit-logged with the officer's username and timestamp.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 4. Main Technical Decisions
 
-## Deploy on Vercel
+- **Security (Auth):** Uses `httpOnly` cookies for session management (safer than localStorage). Passwords are hashed using `bcryptjs`. Custom HMAC-SHA256 signed tokens. Middleware protects all routes.
+- **AI Safety (Validation):** LLM output is unpredictable. We use `Zod` schemas to validate the AI's JSON response at runtime. Includes an exponential backoff retry mechanism for Gemini API errors.
+- **Rate Limiting:** In-memory rate limiter protects the login and AI endpoints to prevent abuse.
+- **Local Language Design:** The UI is entirely in Telugu using `Noto Sans Telugu`. A strict 3-color design system (Indigo, Amber, Slate) ensures a professional interface.
+- **Tech Stack:** Next.js (App Router), Tailwind CSS v4, Framer Motion, Zod, `@google/genai`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 5. How to Run Locally
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository: `git clone <your-github-repo-link>`
+2. Install dependencies: `npm install`
+3. Create `.env.local` in the root and add:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
+   SESSION_SECRET=your_random_64_character_string
+   ```
